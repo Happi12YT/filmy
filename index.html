@@ -37,13 +37,7 @@
   </header>
 
   <!-- SEKCJA WAKACYJNA -->
-  <section class="summer" id="wakacje">
-    <h2>Mamy wakacje! 😎</h2>
-    <p>Zobaczcie ile zostało do końca wakacji i kiedy odpalam live!</p>
-    <button onclick="window.location.href='https://happi12yt.github.io/licznik/koniec_wakacji'">
-  Zobacz tutaj
-    </button>
-  </section>
+  
 
   <!-- COUNTDOWN -->
   <div class="countdown-box">
@@ -61,6 +55,43 @@
     <p>© 2025 Happi12</p>
   </footer>
 
+  <script>
+const apiKey = "AIzaSyCZzK0xMILrked7v9cJh-Xys158hYWCRkg";
+const channelId = "UCxC9CizTr-fF3fAi9hiDIQg"; // Happi12 kanał ID
+const filmGrid = document.querySelector('.filmy-grid');
+
+async function pobierzFilmy() {
+  const response = await fetch(
+    `https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet,id&order=date&maxResults=10`
+  );
+  const data = await response.json();
+
+  data.items.forEach(item => {
+    if (item.id.kind === "youtube#video") {
+      const videoId = item.id.videoId;
+      const title = item.snippet.title;
+      const desc = item.snippet.description;
+      const thumb = item.snippet.thumbnails.medium.url;
+
+      const box = document.createElement('div');
+      box.className = 'film-box';
+      box.innerHTML = `
+        <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank">
+          <img src="${thumb}" alt="Miniatura ${title}"/>
+          <div class="film-overlay">
+            <h3>${title}</h3>
+            <p>${desc.slice(0, 60)}...</p>
+          </div>
+        </a>
+      `;
+      filmGrid.appendChild(box);
+    }
+  });
+}
+
+pobierzFilmy();
+  </script>
+  
   <script>
     function toggleMenu() {
       document.getElementById('menuContainer').classList.toggle('active');
